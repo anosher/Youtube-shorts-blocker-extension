@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Youtube Shorts Blocker
 // @namespace    https://www.anosher.com/
-// @version      0.2
-// @description  it blocks yt shorts
+// @version      0.3
+// @description  It Blocks Youtube Shorts
 // @author       Anosher
 // @match        https://www.youtube.com/*
 // @icon         https://raw.githubusercontent.com/anosher/Youtube-shorts-blocker-extension/main/icons/logo_128x128.png
