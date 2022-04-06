@@ -23,6 +23,7 @@
     if (nonExistentFirstElement) nonExistentFirstElement.remove();
   }, delay);
 
+
   function removeShorts() {
     let output = [];
     let regex = /\/shorts\/*/g;
