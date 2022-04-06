@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Youtube Shorts Blocker
-// @namespace    anosher
+// @namespace    https://www.anosher.com/
 // @version      0.1
 // @description  it blocks yt shorts
 // @author       Anosher
@@ -25,7 +25,7 @@
 
   function removeShorts() {
     let output = [];
-    let regex = /shorts*/gm;
+    let regex = /\/shorts\/*/g;
     for (let i of document.querySelectorAll("*")) {
       if (regex.test(i.href)) {
         output.push(i);
@@ -42,18 +42,7 @@
     }
   }
 
-  setTimeout(() => {
-    removeShorts();
-  }, delay);
-
-  var time = 1;
   var interval = setInterval(function () {
-    if (time <= 100) {
-      removeShorts();
-
-      time++;
-    } else {
-      clearInterval(interval);
-    }
+    removeShorts();
   }, delay);
 })();
