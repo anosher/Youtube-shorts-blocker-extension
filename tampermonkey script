@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Shorts Blocker
 // @namespace    https://www.anosher.com/
-// @version      1.0
+// @version      0.2
 // @description  it blocks yt shorts
 // @author       Anosher
 // @match        https://www.youtube.com/*
