@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube Shorts Blocker
 // @namespace    https://www.anosher.com/
-// @version      0.3
+// @version      1.0
 // @description  It Blocks Youtube Shorts
 // @author       Anosher
 // @match        https://www.youtube.com/*
@@ -10,40 +10,41 @@
 // ==/UserScript==
 /* jshint esversion: 6 */
 (function () {
-  "use strict";
-
-  // Your code here...
-
-  let delay = 1000; //1000 = 1 sec
-
-  //removes shorts from side panel
-  setTimeout(() => {
-    let element = document.querySelectorAll("#endpoint");
-    let nonExistentFirstElement = element[2];
-    if (nonExistentFirstElement) nonExistentFirstElement.remove();
-  }, delay);
-
-
-  function removeShorts() {
-    let output = [];
-    let regex = /\/shorts\/*/g;
-    for (let i of document.querySelectorAll("*")) {
-      if (regex.test(i.href)) {
-        output.push(i);
-        var bruh = i.parentElement;
-        bruh.parentElement.remove();
+    "use strict";
+  
+    // Your code here...
+  
+    let delay = 1000; //1000 = 1 sec
+  
+    //removes shorts from side panel
+    setTimeout(() => {
+      let element = document.querySelectorAll("#endpoint");
+      let nonExistentFirstElement = element[2];
+      if (nonExistentFirstElement) nonExistentFirstElement.remove();
+    }, delay);
+  
+  
+    function removeShorts() {
+      let output = [];
+      let regex = /\/shorts\/*/g;
+      for (let i of document.querySelectorAll("*")) {
+        if (regex.test(i.href)) {
+          output.push(i);
+          var bruh = i.parentElement;
+          bruh.parentElement.remove();
+        }
+      }
+  
+      let shortsPlayer = document.getElementById("shorts-player");
+      let shortsPlayerParent;
+      if (shortsPlayer) shortsPlayerParent = shortsPlayer.parentElement;
+      if (shortsPlayerParent != undefined || null) {
+        // shortsPlayerParent.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
+        window.location.replace('https://www.youtube.com/watch?v=8ZIJBiQgdtA')
       }
     }
-
-    let shortsPlayer = document.getElementById("shorts-player");
-    let shortsPlayerParent;
-    if (shortsPlayer) shortsPlayerParent = shortsPlayer.parentElement;
-    if (shortsPlayerParent != undefined || null) {
-      shortsPlayerParent.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
-    }
-  }
-
-  var interval = setInterval(function () {
-    removeShorts();
-  }, delay);
-})();
+  
+    var interval = setInterval(function () {
+      removeShorts();
+    }, delay);
+  })();
