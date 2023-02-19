@@ -1,57 +1,82 @@
 // ==UserScript==
 // @name         Youtube Shorts Blocker
 // @namespace    https://www.anosher.com/
-// @version      1.0.4
+// @version      1.1.0
 // @description  It Blocks Youtube Shorts
 // @author       Anosher
+// @contributors mr.Jelle-Beat
 // @match        https://www.youtube.com/*
 // @icon         https://raw.githubusercontent.com/anosher/Youtube-shorts-blocker-extension/main/icons/logo_128x128.png
 // @license      MIT
 // ==/UserScript==
 /* jshint esversion: 6 */
 (function () {
-    "use strict";
-  
-    // Your code here...
-  
-    let delay = 1000; //1000 = 1 sec
+  "use strict";
+  const regex = /\/shorts\/*/;
 
-  //removes shorts from side panel
-  setTimeout(() => {
-    let element = document.querySelectorAll("#endpoint");
-    let nonExistentFirstElement = element[2];
-    if (nonExistentFirstElement) nonExistentFirstElement.remove();
-  }, delay * 2);
+  // Removes shorts from side panel
+  function removeShortsNavigation() {
+    const elements = [...document.querySelectorAll('#endpoint[title="Shorts"]')];
+    elements.forEach(e => e.remove());
+  }
 
-  function removeShortsVideos() {
-    let output = [];
-    let regex = /\/shorts\/*/g;
-    for (let i of document.querySelectorAll("*")) {
-      if (regex.test(i.href)) {
-        output.push(i);
-        var bruh = i.parentElement;
-        bruh.parentElement.remove();
+  // Removes shorts shelf recommendations
+  function removeShortsShelf() {
+    const shelves = [...document.querySelectorAll('.ytd-rich-shelf-renderer [id="title-text"]')];
+    for (let shelfTitle of shelves) {
+      if (shelfTitle.innerText == 'Shorts') {
+        const shelf = shelfTitle.closest('ytd-rich-section-renderer');
+        shelf.remove();
       }
     }
   }
 
-  function redirectShorts() {
-    let shortsPlayer = document.getElementById("shorts-player");
-    let shortsPlayerParent;
-    if (shortsPlayer) shortsPlayerParent = shortsPlayer.parentElement;
-    if (shortsPlayerParent != undefined || null) {
-      // shortsPlayerParent.parentElement.parentElement.parentElement.parentElement.parentElement.remove();
-      window.location.replace("https://youtu.be/AIJLuBc5P-o");
+  // Removes shorts from video listings
+  function removeShortsVideos() {
+    const thumbnails = [...document.querySelectorAll("#thumbnail")];
+    for (let thumbnail of thumbnails) {
+      if (regex.test(thumbnail.href)) {
+        let short = thumbnail.closest('.ytd-grid-renderer');
+        if (!short) {
+          short = thumbnail.closest('.ytd-shelf-renderer');
+        }
+        if (short) {
+          short.remove();
+        }
+      }
     }
   }
 
-  function removeShorts() {
-    removeShortsVideos();
-
-    redirectShorts();
+  // Redirect to subscriptions if the shorts player is detected
+  function redirectShorts(event) {
+    if (event?.detail?.pageType == 'shorts' || regex.test(window.location.href)) {
+      window.location.replace("https://www.youtube.com/feed/subscriptions");
+    }
   }
 
-  var interval = setInterval(function () {
-    removeShorts();
-  }, delay);
+  // When navigating to other views
+  function onNavigateFinish() {
+    redirectShorts();
+    removeShortsNavigation();
+    removeShortsVideos();
+  }
+
+  // When the page is ready to be "improved"
+  function onLoadFinish() {
+    removeShortsNavigation();
+    removeShortsShelf();
+  }
+
+  // When new items are scrolled into view
+  function onUpdateEvent(event) {
+    if (event?.detail?.actionName == 'yt-forward-redux-action-to-live-chat-iframe') {
+      removeShortsVideos();
+    }
+  }
+
+  document.addEventListener('yt-navigate-finish', onNavigateFinish);
+  document.addEventListener('yt-navigate-start', redirectShorts);
+  document.addEventListener('yt-service-request-completed', onLoadFinish);
+  document.addEventListener('yt-action', onUpdateEvent);
+
 })();
